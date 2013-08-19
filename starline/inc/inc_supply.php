@@ -49,70 +49,66 @@
     }
     
     function getMedicationForm() {
-        $query = "SELECT me.MedicalSupplyID AS 'sID', me.SupplyTypeID, m.Description, m.LastOrdered, m.Cost, sr.SupplyRoomNumber, u.UnitID 
-            FROM Medication AS m, MedicalSupplies as me, medication_has_supplyroom as mhs, vendor_has_medication as vhm, supplyroom as sr, unit as u
-            WHERE m.MedicalSupplyID = me.MedicalSupplyID;";
+        $query = "SELECT m.MedicationID AS ID, m.Description, m.LastOrdered, m.Cost, m.AmountLeft, m.`Maximum Capacity`, (AmountLeft/`Maximum Capacity`) AS percentage
+			FROM Medication AS m;";
         $result = mysql_query($query);
         echo "<div> Medication Supplies </div><br>";
-        echo getTable($result, "MedicalSupplies");
+        echo getTable($result, "medication");
     }
     
     function getSurgicalForm() {
-        $query = "SELECT me.MedicalSupplyID AS 'sID', me.SupplyTypeID, se.Description, se.LastOrdered, se.Cost, u.Name 
-            FROM SurgicalEquipment AS se, MedicalSupplies as me, unit as u 
-            WHERE se.MedicalSupplyID = me.MedicalSupplyID AND se.UnitID = u.UnitID";
+        $query = "SELECT se.SurgicalID AS ID, se.Description, se.LastOrdered, se.Cost, se.AmountLeft, se.`Maximum Capacity`, (AmountLeft/`Maximum Capacity`) AS percentage
+			FROM surgicalequipment AS se";
         $result = mysql_query($query);
         echo "<div> Surgical Supplies </div><br>";
-        echo getTable($result, "SurgicalEquipment");
+        echo getTable($result, "surgicalequipment");
     }
     
     function getSupportForm() {
-        $query = "SELECT me.MedicalSupplyID AS 'sID', me.SupplyTypeID, sd.Description, sd.LastOrdered, sd.Cost 
-            FROM SupportingDevices AS sd, MedicalSupplies as me 
-            WHERE sd.MedicalSupplies_MedicalSupplyID = me.MedicalSupplyID;";
+        $query = "SELECT se.SupportingDevicesID AS ID, se.Description, se.LastOrdered, se.Cost, se.AmountLeft, se.`Maximum Capacity`, (AmountLeft/`Maximum Capacity`) AS percentage
+			FROM supportingdevices AS se";
         $result = mysql_query($query);        
         echo "<div> Support Supplies </div><br>";
-        echo getTable($result, "SupportingDevices");
+        echo getTable($result, "supportingdevices");
     }
     
+//    
+//    SELECT bps.BasicPatientSupplyID AS ID, bps.Description, bps.LastOrdered, bps.Cost, bps.AmountLeft, bps.`Maximum Capacity`, shb.SupplyRoomNumber, shb.Floor 
+//			FROM basicpatientsupply AS bps, supplyroom_has_basicpatientsupply AS shb
+//			WHERE shb.BasicPatientSupplyID = bps.BasicPatientSupplyID
     function getPatientForm() {
-        $query = "SELECT me.NonMedicalSupplyID AS 'sID', me.Supplies_SupplyTypeID, p.Description, p.LastOrdered, p.Cost
-            FROM basicpatientsupply AS p, nonmedicalsupplies as me 
-            WHERE p.NonMedicalSupplies_NonMedicalSupplyID = me.NonMedicalSupplyID;";
+        $query = "SELECT bps.BasicPatientSupplyID AS ID, bps.Description, bps.LastOrdered, bps.Cost, bps.AmountLeft, bps.`Maximum Capacity`, (AmountLeft/`Maximum Capacity`) AS percentage
+			FROM basicpatientsupply AS bps";
         $result = mysql_query($query);
         echo "<div> Patient Supplies </div><br>";
         echo getTable($result, "basicpatientsupply");
     }
     
     function getAdministrativeForm() {
-        $query = "SELECT me.NonMedicalSupplyID AS 'sID', me.Supplies_SupplyTypeID, a.Description, a.LastOrdered, a.Cost
-            FROM administrativesupply AS a, nonmedicalsupplies as me 
-            WHERE a.NonMedicalSupplies_NonMedicalSupplyID = me.NonMedicalSupplyID";
+        $query = "SELECT ad.AdminSupplyID AS ID, ad.Description, ad.LastOrdered, ad.Cost, ad.AmountLeft, ad.`Maximum Capacity`, (AmountLeft/`Maximum Capacity`) AS percentage
+			FROM administrativesupply AS ad";
         $result = mysql_query($query);
         echo "<div> Administrative Supplies </div><br>";
         echo getTable($result, "administrativesupply");
     }
     
     function getNutritionForm() {
-        $query = "SELECT n.NutritionalSupplyID AS 'sID', n.Supplies_SupplyTypeID, n.Type AS 'Description', n.LastOrdered 
+        $query = "SELECT n.NutritionalSupplyID AS ID, n.Type AS 'Description', n.LastOrdered, n.NeedsFill 
                 FROM nutritionalsupply AS n";
         $result = mysql_query($query);
         echo "<div> Nutrition Supplies </div><br>";
         echo getTable($result, "nutritionalsupply");
     }
     
-    function orderSupply() {
-         echo 'SUPPLY ORDER GETS PROCESSED HERE';
-        // DO STUFF HERE
-    }
+
     
     function getTable($result, $tableName) {
-        $table = '<div><table border="1" width ="600px">';
+        $table = '<div><table border="1" width ="830px">';
         $table .= '    <tr> <th class="tableHeaders" width ="150px">Description </th>';
-//        $table .= '         <th class="tableHeaders" width ="150px">Unit </th>';
-//        $table .= '         <th class="tableHeaders" width ="150px">Supply Room </th>';
         $table .= '         <th class="tableHeaders" width ="150px">Last Ordered </th>';
         $table .= '         <th class="tableHeaders" width ="150px">Cost </th>';
+        $table .= '         <th class="tableHeaders" width ="150px">Amount Left</th>';
+        $table .= '         <th class="tableHeaders" width ="150px">Maximum Capacity</th>';
         $table .= '         <th class="tableHeaders" width ="150px">Order Now </th>';                      
         $table .= '    </tr>';
         
@@ -120,12 +116,23 @@
             $desc =  $row["Description"];
             $lo =  $row["LastOrdered"];
             $cost =  $row["Cost"];
+            $al = $row["AmountLeft"];
+            $mc = $row["Maximum Capacity"];
+            $percentage = round(($row['percentage'] * 100), 2);
+
        
         $table .= '    <tr> <td> '. $desc . ' </td>';
         $table .= '         <td> '. $lo . ' </td>';
         $table .= '         <td> '. $cost . ' </td>';
+        
+        if  ($percentage < 10) {
+            $table .= '         <td style="color:red"> '. $al . ' ('.$percentage.'% Left) </td>';
+        } else {
+            $table .= '         <td> '. $al . ' ('.$percentage.'% Left) </td>';
+        }
+        $table .= '         <td> '. $mc . ' </td>';
         if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3) {
-            $table .= '         <td> <a href="index.php?tname='.$tableName.'&id='.$row["sID"].'"> Submit Order </a> </td>';  
+            $table .= '         <td> <a href="index.php?tname='.$tableName.'&id='.$row["ID"].'#Supplies"> Submit Order </a> </td>';  
         } else {
             $table .= '         <td> Not Allowed </td>';
         }
@@ -138,5 +145,21 @@
         return $table;        
     }
     
-    
+    function orderSupply($tname, $id) {
+        switch ($tname) {
+            case 'medication': { $idname = "MedicationID"; break; }
+            case 'surgicalequipment': { $idname = "SurgicalID"; break; }             
+            case 'supportingdevices': { $idname = "SupportingDeviceID"; break; }              
+            case 'basicpatientsupply': { $idname = "BasicPatientSupplyID"; break; }            
+            case 'administrativesupply': { $idname = "AdminID"; break; }     
+        }
+        $query = "UPDATE $tname SET AmountLeft = `Maximum Capacity` WHERE $idname = $id";
+        
+        if(mysql_query($query)) {
+            echo '<br> Supply Ordered Succesfully! <br>';
+        }  else {
+            echo $query;
+            echo 'query error';
+        }
+    }
 ?>

@@ -1,50 +1,54 @@
 <?php
 
-    function getServiceForm($task) {
-        if ($task == 'View') {
-            getServiceViewForm();
-         } else if ($task == 'Add') {
-             getServiceAddForm();
-         } else if ($task == 'Delete') {
-             getServiceDeleteForm();
-         }
-    }
-
-        function getServiceTable() {
-//       $query = "SELECT a.ServiceID, s.Name AS SName, CONCAT(p.FirstName,' ',p.LastName) AS PName, CONCAT(e.FirstName,' ',e.LastName) AS EName, a.StartTime, a.EndTime, u.Name AS UName
-//        FROM appointment AS a, service AS s, patient AS p, employee as e, unit AS u
-//        WHERE a.ServiceID = s.ServiceID
-//        AND p.HospitalCardID IN (SELECT pl.PatientID FROM patient_list as pl WHERE p.HospitalCardID = pl.PatientID AND pl.PatientListID = a.PatientListID)
-//        AND e.EmployeeID IN (SELECT el.EmployeeID FROM employee_list as el WHERE e.EmployeeID = el.EmployeeID AND el.EmployeeListID = a.EmployeeListID)
-//        AND u.UnitID = a.UnitID";
-       
-       $query = "SELECT a.AppointmentID, s.Name AS SName, CONCAT(p.FirstName,' ',p.LastName) AS PName, CONCAT(e.FirstName,' ',e.LastName) AS EName, a.StartTime, a.EndTime, u.Name AS UName
-                FROM appointment AS a JOIN service AS s ON (a.ServiceID = s.ServiceID) JOIN patient AS p ON (p.HospitalCardID = a.PatientID) JOIN employee_appointment AS ea ON (a.AppointmentID = ea.AppointmentID) JOIN employee AS e ON (e.EmployeeID = ea.EmployeeID)
-                JOIN unit AS u ON (u.UnitID = a.UnitID)";
+      function getServiceTable() {
+       $query = "SELECT a.AppointmentID, s.Name AS SName, CONCAT(p.FirstName,' ',p.LastName) AS PName, a.StartTime, a.EndTime, u.Name AS UName, u.UnitID AS uID
+                FROM appointment AS a 
+                JOIN service AS s ON (a.ServiceID = s.ServiceID) 
+                JOIN patient AS p ON (p.HospitalCardID = a.PatientID)
+                JOIN unit AS u ON (u.UnitID = a.UnitID) 
+                WHERE s.ServiceID <> 1 AND s.ServiceID <> 3 AND s.ServiceID <> 9
+                ORDER BY `a`.`StartTime`  ASC";
         $result = mysql_query($query);
             
         
         $table = '<div><table border="1" width ="830px">';
         $table .= '    <tr> <th class="tableHeaders" width ="100px">Service Name</th>';
         $table .= '         <th class="tableHeaders" width ="105px">Patient Name</th>';
-        $table .= '         <th class="tableHeaders" width ="120px">Employee Name</th>';
+        $table .= '         <th class="tableHeaders" width ="220x">Employee Name</th>';
         $table .= '         <th class="tableHeaders" width ="125px">Start Time</th>';
         $table .= '         <th class="tableHeaders" width ="125px">End Time</th>';
-        $table .= '         <th class="tableHeaders" width ="175px">Unit Name</th>';  
+        $table .= '         <th class="tableHeaders" width ="75px">Unit Name</th>';  
         $table .= '         <th class="tableHeaders" width ="90px">Delete</th>'; 
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
             $sName =  $row['SName'];
             $pName =  $row['PName'];
-            $eName =  $row['EName'];
             $sd =  $row["StartTime"];
             $ed =  $row["EndTime"];
             $unit =  $row["UName"];
+            $aID = $row["AppointmentID"];
+            if ($row["uID"] == 1) {
+                $unit = 'Palliative';
+            }
        
         $table .= '    <tr> <td> '. $sName . ' </td>';
         $table .= '         <td> '. $pName . ' </td>';
-        $table .= '         <td> '. $eName . ' </td>';
+
+        $table .= '         <td> ';
+        
+        $query2 = "SELECT e.EmployeeID as eID, CONCAT(e.FirstName,' ',e.LastName,' [',j.Name,']') AS EName 
+            FROM employee AS e JOIN employee_appointment AS ea ON (ea.EmployeeID = e.EmployeeID) JOIN jobpayroll AS j ON (j.JobID = e.JobID)
+            WHERE ea.AppointmentID = $aID
+            ORDER BY j.JobID";
+        $result2 = mysql_query($query2);
+        $row2 = mysql_fetch_assoc($result2);
+        $table .= $row2['EName'];
+         while ($row2 = mysql_fetch_assoc($result2)) {
+            $table .= '<br>'.$row2['EName'];
+        }
+        $table .= ' </td>';
+        
         $table .= '         <td> '. $sd . ' </td>';
         $table .= '         <td> '. $ed . ' </td>';
         $table .= '         <td> '. $unit . ' </td>';
@@ -67,7 +71,7 @@
         $form .= '<form action="index.php#Services" method ="POST">'; 
         
         $form .= 'Select Service Type<select name="serviceID">';
-        $query = "SELECT ServiceID, Name FROM Service";
+        $query = "SELECT ServiceID, Name FROM Service as s WHERE s.ServiceID <> 1 AND s.ServiceID <> 3 AND s.ServiceID <> 9";
         $result = mysql_query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $form .= '<option value="'.$row['ServiceID'].'">'.$row['Name'].'</option>';
@@ -85,7 +89,7 @@
         $form .= 'Select Employee <select name="employeeID">';
         $query = "SELECT EmployeeID as eID, CONCAT(e.FirstName,' ',e.LastName,' [',j.Name,']') AS EName 
             FROM employee AS e, jobpayroll AS j 
-            WHERE j.JobID = e.JobID AND (e.JobID = 4 OR e.JobID = 10)";
+            WHERE j.JobID = e.JobID";
         $result = mysql_query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $form .= '<option value="'.$row['eID'].'">'.$row['EName'].'</option>';

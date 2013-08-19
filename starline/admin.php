@@ -4,6 +4,9 @@ require 'inc/inc_forms.php';
 require 'inc/inc_service.php';
 require 'inc/inc_supply.php';
 require 'inc/inc_staff.php';
+require 'inc/inc_surgery.php';
+require 'inc/inc_schedule.php';
+require 'inc/inc_reports.php';
 
  if (isset($_GET['service'])) {
      // header('location: index.php#Services');
@@ -35,27 +38,27 @@ require 'inc/inc_staff.php';
         if (isset($_POST['serviceID'])) {
             addService($_POST['serviceID'], $_POST['patientID'], $_POST['employeeID'], $_POST['unitID'], $_POST['startTime'], $_POST['endTime']);
         }
-        
         if (isset($_GET['delete'])) {
             deleteService($_GET['delete']);
         }
-      
         if (isset($_GET['service'])) {
             echo '<a href="index.php?#Services">View Services</a><br><br>';
             getServiceAddForm();
-        }   
-        else {
+        }  else {
             echo '<a href="index.php?service=true#Services">Click Here To Add a Service</a><br><br>';
             echo getServiceTable();
         }
-        
-       
       ?>
   </div>
     
   <div id="Supplies"><br>
      <?php 
      echo '<a href="index.php?#Supplies">Return to Start</a><br>';
+     
+        if (isset($_GET['tname'])) {
+            orderSupply($_GET['tname'], $_GET['id']);
+        }
+     
          if (!isset($_POST['supplyType']) && !isset($_POST['supplySpecificType'])) {
             getOrderSupplyForm();
         } else if (!isset($_POST['supplySpecificType'])) {
@@ -72,11 +75,31 @@ require 'inc/inc_staff.php';
     
   <div id="Surgeries"><br>
       <?php 
-
+     
+        if (isset($_POST['patientID']) && isset($_POST['eID1']) && isset($_POST['roomNum'])) {
+          addSurgery($_POST['roomNum'], $_POST['patientID'], $_POST['eID1'], $_POST['eID2'], $_POST['eID3'], $_POST['startTime'], $_POST['endTime'], $_POST['surgeryType']);
+        }
+        if (isset($_GET['deleteSurgery'])) {
+            deleteSurgery($_GET['deleteSurgery']);
+        }        
+        if (isset($_GET['surgery'])) {
+            echo '<a href="index.php?#Surgeries">Return</a><br><br>';
+            getSurgeryAddForm();
+        }  else {
+            echo '<a href="index.php?surgery=true#Surgeries">Click Here To Schedule a Surgery</a><br><br>';
+        }
+        echo getSurgeryTable();
      ?>      
   </div>
     
   <div id="Schedules"><br>
+   <?php  
+   
+      getScheduleForm();
+      if (isset($_POST['scheduleEmployeeID'])) {
+        echo getScheduleTable($_POST['scheduleEmployeeID']);
+      }  
+    ?>
   </div>
     
   <div id="Staff"><br> 
@@ -92,6 +115,9 @@ require 'inc/inc_staff.php';
   </div>
   
   <div id="Reports"><br>
+    <?php
+      // getReportsForm();
+    ?>
   </div>   
     
 </div>

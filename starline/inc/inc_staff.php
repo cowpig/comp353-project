@@ -23,30 +23,29 @@
         $form .= '<option value="15">Technicia Pediatric</option>';
         $form .= '</select>';  
         $form .= '<input name="submit_change" type="submit" value="Go">'; 
-        $form .= '</form></div>';
+        $form .= '</form> </div>';
 
         echo $form;
 
     }
-   
-
     
     function getStaffTable($id) {
-        $query = "SELECT e.EmployeeID, e.FirstName, e.LastName, e.address, e.PhoneNumber, e.PostalCode, e.StartDate, j.Name 
-                FROM employee as e, jobpayroll as j 
-                WHERE e.JobID = j.JobID ";
+        $query = "SELECT e.EmployeeID, e.FirstName, e.LastName, e.address, e.PhoneNumber, e.PostalCode, e.StartDate, j.Name, u.Name AS UnitName
+                FROM employee as e, jobpayroll as j, unit as u
+                WHERE e.JobID = j.JobID AND u.unitID = e.unitID";
         if ($id != 0) {
             $query .= "AND e.JobID = $id";
         }
         $result = mysql_query($query);
-        $table = '<div><table border="1" width ="700px">';
+        $table = '<div><table border="1" width ="830px">';
         $table .= '    <tr> <th class="tableHeaders" width ="100px">First Name</th>';
         $table .= '         <th class="tableHeaders" width ="100px">Last Name </th>';
         $table .= '         <th class="tableHeaders" width ="100px">Job Title </th>'; 
         $table .= '         <th class="tableHeaders" width ="125px">Address </th>';
         $table .= '         <th class="tableHeaders" width ="90px">Phone Number </th>';
         $table .= '         <th class="tableHeaders" width ="85px">Postal Code </th>';
-        $table .= '         <th class="tableHeaders" width ="100px">Start Date </th>';             
+        $table .= '         <th class="tableHeaders" width ="100px">Start Date </th>';    
+        $table .= '         <th class="tableHeaders" width ="150px">Unit Name </th>';        
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
@@ -56,7 +55,8 @@
             $ph =  $row["PhoneNumber"];
             $pc =  $row["PostalCode"];
             $sd = $row["StartDate"];
-            $jname =  $row["Name"];
+            $jname = $row["Name"];
+            $uName = $row["UnitName"];
        
         $table .= '    <tr> <td> '. $fname . ' </td>';
         $table .= '         <td> '. $lname . ' </td>';
@@ -65,6 +65,7 @@
         $table .= '         <td> '. $ph . ' </td>';
         $table .= '         <td> '. $pc . ' </td>';  
         $table .= '         <td> '. $sd . ' </td>';
+        $table .= '         <td> '. $uName . ' </td>';
         $table .= '    </tr>';
 
         
@@ -73,6 +74,5 @@
         
         return $table;        
     }
-    
     
 ?>
