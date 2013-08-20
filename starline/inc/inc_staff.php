@@ -30,11 +30,11 @@
     }
     
     function getStaffTable($id) {
-        $query = "SELECT e.EmployeeID, e.FirstName, e.LastName, e.address, e.PhoneNumber, e.PostalCode, e.StartDate, j.Name, u.Name AS UnitName
+        $query = "SELECT e.EmployeeID, e.FirstName, e.LastName, e.address, e.PhoneNumber, e.PostalCode, e.StartDate, j.Name, u.Name AS UnitName, u.UnitID AS uID, j.JobID
                 FROM employee as e, jobpayroll as j, unit as u
                 WHERE e.JobID = j.JobID AND u.unitID = e.unitID";
         if ($id != 0) {
-            $query .= "AND e.JobID = $id";
+            $query .= " AND e.JobID = $id";
         }
         $result = mysql_query($query);
         $table = '<div><table border="1" width ="830px">';
@@ -45,7 +45,8 @@
         $table .= '         <th class="tableHeaders" width ="90px">Phone Number </th>';
         $table .= '         <th class="tableHeaders" width ="85px">Postal Code </th>';
         $table .= '         <th class="tableHeaders" width ="100px">Start Date </th>';    
-        $table .= '         <th class="tableHeaders" width ="150px">Unit Name </th>';        
+        $table .= '         <th class="tableHeaders" width ="75px">Unit Name</th>';
+        $table .= '         <th class="tableHeaders" width ="75px">Current Pay</th>'; 
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
@@ -57,6 +58,9 @@
             $sd = $row["StartDate"];
             $jname = $row["Name"];
             $uName = $row["UnitName"];
+            if ($row["uID"] == 1) {
+                $uName = 'Palliative';
+            }
        
         $table .= '    <tr> <td> '. $fname . ' </td>';
         $table .= '         <td> '. $lname . ' </td>';
@@ -66,6 +70,7 @@
         $table .= '         <td> '. $pc . ' </td>';  
         $table .= '         <td> '. $sd . ' </td>';
         $table .= '         <td> '. $uName . ' </td>';
+        $table .= '         <td> $'. getEmployeePay($row['EmployeeID'], $row['JobID']) . ' </td>';
         $table .= '    </tr>';
 
         

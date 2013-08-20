@@ -22,13 +22,27 @@ require 'inc/inc_interns.php';
   
   <div id="Patients"><br>
       <?php
-		echo getPatientTable($_SESSION['EmployeeID']);
+        if (!isset($_POST['patientChoice']) || ($_POST['patientChoice'])==0) {
+            getPatientForm();
+            echo getPatientTable(0);
+        } else {
+            getPatientForm();
+            echo getPatientTable($_SESSION['EmployeeID']);
+        }
+
+          
       ?>
   </div> 
   
    <div id="Interns"><br>
       <?php
-      
+      if (!isset($_POST['internType'])) {
+            getInternForm();
+            echo getInternTable(0);
+        } else {
+            getInternForm();
+            echo getInternTable($_POST['internType']);
+        }   
       ?>
   </div>  
    

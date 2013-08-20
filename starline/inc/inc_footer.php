@@ -1,5 +1,2 @@
-<div align="center">
-</div>
-<br />
-<br />
-<div align="center"></div>
+<div align="center"> &copy;2013 Starline Inc.<br />
+  All rights reserved.</div>

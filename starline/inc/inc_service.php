@@ -143,4 +143,60 @@
     }
    
     
+    function getServiceTypeAddForm() {
+
+        $form = '<div>';
+        $form .= '<form action="index.php#Services" method ="POST">'; 
+
+        $form .= 'Enter Service Type Name <input type="text" name="sType"><br>';
+        $form .= 'Enter Service Amount Billable <input type="text" name="aBill">';
+
+        $form .= '<input name="submit_change" type="submit" value="Submit">'; 
+        $form .= '</form></div>';
+        echo $form . '<br> Current Services List';
+        
+        $query = "SELECT ServiceID, Name, AmountBillable FROM Service AS s WHERE s.ServiceID <> 1 AND s.ServiceID <> 3 AND s.ServiceID <> 9";
+        $result = mysql_query($query);
+            
+        $table = '<div><table border="1" width ="300px">';
+        $table .= '    <tr> <th class="tableHeaders" width ="150px">Service Name</th>';
+        $table .= '         <th class="tableHeaders" width ="150px">Amount Billable</th>';
+        $table .= '    </tr>';
+        
+        while ($row = mysql_fetch_assoc($result)) {
+            $sName =  $row['Name'];
+            $abill =  $row['AmountBillable'];
+       
+            $table .= '    <tr> <td> '. $sName . ' </td>';
+            $table .= '     <td> '. $abill . ' </td>';
+            //$table .= '     <td> <a href="index.php?deleteServiceType='.$row["ServiceID"].'#Services">Delete Now</a> </td>';
+            $table .= '    </tr>';
+        }
+        $table .= '   </table> </div>';  
+        
+        echo $table;      
+    }
+
+    function addServiceType($sType, $aBill) {
+        $query = "INSERT INTO service(Name, AmountBillable) VALUES ('$sType','$aBill')";
+        if(mysql_query($query)) {
+            echo '<br> Service Type Added Succesfully! <br>';
+        }  else {
+            echo $query;
+            echo 'query error';
+        }
+    }    
+    
+//    function deleteServiceType($id) {
+//        $query = "DELETE FROM Service WHERE ServiceID = $id";
+//        if(mysql_query($query)) {
+//            echo '<br> Service Type Deleted Succesfully! <br>';
+//        }  else {
+//            echo $query;
+//            echo 'query error';
+//        }
+//    }
+    
+    
+    
 ?>

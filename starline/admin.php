@@ -22,7 +22,7 @@ require 'inc/inc_reports.php';
     <li><a href="#Surgeries"><span>Surgeries</span></a></li>
     <li><a href="#Schedules"><span>Schedules</span></a></li>
     <li><a href="#Staff"><span>Staff</span></a></li>
-    <li><a href="#Reports"><span>Reports</span></a></li>
+<!--    <li><a href="#Reports"><span>Reports</span></a></li>-->
   </ul>
     
   <div id="Home"><br>
@@ -34,6 +34,10 @@ require 'inc/inc_reports.php';
     
   <div id="Services"> <br>
       <?php 
+        
+        if (isset($_POST['sType'])) {
+            addServiceType($_POST['sType'], $_POST['aBill']);
+        }
       
         if (isset($_POST['serviceID'])) {
             addService($_POST['serviceID'], $_POST['patientID'], $_POST['employeeID'], $_POST['unitID'], $_POST['startTime'], $_POST['endTime']);
@@ -44,8 +48,14 @@ require 'inc/inc_reports.php';
         if (isset($_GET['service'])) {
             echo '<a href="index.php?#Services">View Services</a><br><br>';
             getServiceAddForm();
-        }  else {
-            echo '<a href="index.php?service=true#Services">Click Here To Add a Service</a><br><br>';
+        }  else  if (isset($_GET['serviceType'])) {
+            echo '<a href="index.php?#Services">View Services</a><br><br>';
+            getServiceTypeAddForm();
+        } else {
+            if ($_SESSION['JobID'] == 1){ 
+                 echo '<a href="index.php?serviceType=true#Services">Click Here To Add a Service Type</a><br>';
+            }
+            echo '<a href="index.php?service=true#Services">Click Here To Schedule a Service</a><br><br>Current Scheduled Services <br>';
             echo getServiceTable();
         }
       ?>
@@ -85,7 +95,7 @@ require 'inc/inc_reports.php';
         if (isset($_GET['surgery'])) {
             echo '<a href="index.php?#Surgeries">Return</a><br><br>';
             getSurgeryAddForm();
-        }  else {
+        }  else if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3){ 
             echo '<a href="index.php?surgery=true#Surgeries">Click Here To Schedule a Surgery</a><br><br>';
         }
         echo getSurgeryTable();
@@ -114,11 +124,9 @@ require 'inc/inc_reports.php';
      ?>   
   </div>
   
-  <div id="Reports"><br>
-    <?php
-      // getReportsForm();
-    ?>
-  </div>   
+<!--  <div id="Reports"><br>
+
+  </div>   -->
     
 </div>
 <script type="text/javascript">$(function(){$("#jQueryUITabs1").tabs();$(".datepicker").datetimepicker({
