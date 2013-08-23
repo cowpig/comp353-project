@@ -1654,7 +1654,7 @@ INSERT INTO `user` (`UserID`, `Login`, `Password`, `EmployeeID`) VALUES
 (3, 'doctor', 'dollar', 1039),
 (4, 'nurse', 'dollar', 1231),
 (5, 'resident', 'dollar', 1003),
-(5, 'dr', 'seb', 1098);
+(6, 'dr', 'seb', 1098);
 
 -- --------------------------------------------------------
 
