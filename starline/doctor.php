@@ -30,6 +30,10 @@ require 'inc/inc_schedule.php';
         } else {
             getPatientForm();
             echo getPatientTable($_SESSION['EmployeeID']);
+            if (isset($_GET['update'])){
+				echo "lalala";
+				updatePatient($_GET['id'], $_GET['update']);
+			}
         }
 
           

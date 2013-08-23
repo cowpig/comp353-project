@@ -15,8 +15,14 @@
 
     }
 
-function updatePatient($info){
-	echo $info; 
+function updatePatient($hcard,$notes){
+	
+			echo $notes;
+	$query = "UPDATE patient
+			  SET DoctorNotes=$notes
+			  WHERE HospitalCardID=$hcard"; 
+	mysql_query($query) or die(mysql_error());
+	
 } 
 
 function getPatientTable($id) {
@@ -52,23 +58,35 @@ function getPatientTable($id) {
         $table .= '         <td> '. $medlist . ' </td>';
 		$table .= '         <td> '. $notes . ' </td>';  
         if ($id != 0){
-			$_POST['patientChoice']=1;
 			$table .= '         <td>
-									<a href="index.php?update='.$notes.'#Patients"> Update Information </a>
+									
+									<button onclick="update()"> Update </button>
+									<script>
+									var hcard = "<? $hcard ?>"
+									function update(){
+										var up=prompt("Please enter patient updated info", "info");
+										
+										window.location.href = "index.php?update="+up+"&id="+hcard+"#Patients";	
+									}
+									
+									</script>
 								</td>';
-			if (isset($_GET['update'])){
-				updatePatient($_GET['update']);
-				$_POST['patientChoice']=1;
+							
 			}
+			
+			
 		}
-        $table .= '    </tr>';
 
-        
-        } 
+
+        $table .= '    </tr>';
+       
+         
         $table .= '   </table> </div>';  
         
         return $table;        
     }
+    
+ 
     
 ;
 
