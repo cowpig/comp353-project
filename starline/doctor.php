@@ -31,9 +31,9 @@ require 'inc/inc_doctor_reports.php';
         } else {
             getPatientForm();
             echo getPatientTable($_SESSION['EmployeeID']);
-            if (isset($_GET['update'])){
+           	if (isset($_POST['updateNotes'])){
 				echo "lalala";
-				updatePatient($_GET['id'], $_GET['update']);
+				//updatePatient($hcard, $_POST['updateNotes']);
 			}
         }
 

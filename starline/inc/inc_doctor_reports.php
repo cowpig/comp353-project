@@ -6,7 +6,7 @@
         $form .= '<form action="index.php#Reports" method ="POST">';
         
         $form .= 'Select Report Type <br><br>';
-        $form .= '<input type="radio" name="reportMainType" value="patientReportt"> Patients Similar Problems <br>';
+        $form .= '<input type="radio" name="reportMainType" value="patientReport"> Patients Similar Problems <br>';
         $form .= '<input type="radio" name="reportMainType" value="intResReport"> Interns/Residents Specialization <br>';
 
         $form .= '<br><input name="submit_change" type="submit" value="Proceed">'; 
@@ -17,7 +17,7 @@
     
     function getDoctorSpecificReportForm($reportType) { 
         switch ($reportType) {
-            case 'patientReportt': { getPatientReport(); break; }
+            case 'patientReport': { getPatientReport(); break; }
             case 'intResReport': { getIntResReport(); break; }
         }
      }
@@ -35,9 +35,9 @@
         $result = mysql_query($query);
         $table = '<div><table border="1" width ="830px">';
         $table .= '         <th class="tableHeaders">Name/Title</th>';
-        $table .= '         <th class="tableHeaders">Service Specializatiton</th>';
+        $table .= '         <th class="tableHeaders">Service Specialization</th>';
         $table .= '         <th class="tableHeaders">Count</th>';  
-        $table .= '         <th class="tableHeaders">Attending Phyiscian</th>'; 
+        $table .= '         <th class="tableHeaders">Attending Physician</th>'; 
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
@@ -58,5 +58,40 @@
         
         echo $table;   
          
-         
      }
+     
+     function getPatientReport(){
+		   echo '<a href="index.php?#Reports">Return</a><br><br>';
+         $query = "SELECT * 
+                FROM patient as p
+                ORDER BY MedicationListID ";
+        $result = mysql_query($query);
+        $table = '<div><table border="1" width ="830px">';
+        $table .= '    <tr>';       
+		$table .= '         <th class="tableHeaders" width="50px">Medication ID</th>';
+        $table .= '         <th class="tableHeaders">Medicare number</th>';
+        $table .= '         <th class="tableHeaders">First Name</th>';
+        $table .= '         <th class="tableHeaders">Last Name</th>';           
+        $table .= '         <th class="tableHeaders" width ="200px">Doctor notes </th>'; 
+        $table .= '    </tr>';
+        
+        while ($row = mysql_fetch_assoc($result)) {
+            $medicare=$row["MedicareNumber"];
+            $fname =  $row["FirstName"];
+            $lname = $row["LastName"];
+            $medlist =  $row["MedicationListID"];
+            $notes =  $row["DoctorNotes"];
+		$table .= '    <tr>';
+        $table .= '         <td> '. $medlist . ' </td>';
+        $table .= '         <td> '. $medicare . ' </td>';  
+        $table .= '         <td> '. $fname. ' </td>';       
+        $table .= '         <td> '. $lname . ' </td>';
+		$table .= '         <td> '. $notes . ' </td>';  
+        $table .= '    </tr>';
+        }
+        $table .= '   </table> </div>';  
+        
+        echo $table;   
+		 
+		 
+	 }

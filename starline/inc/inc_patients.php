@@ -17,7 +17,6 @@
 
 function updatePatient($hcard,$notes){
 	
-			echo $notes;
 	$query = "UPDATE patient
 			  SET DoctorNotes=$notes
 			  WHERE HospitalCardID=$hcard"; 
@@ -38,9 +37,9 @@ function getPatientTable($id) {
         $table .= '         <th class="tableHeaders" width ="100px">First Name</th>';
         $table .= '         <th class="tableHeaders" width ="100px">Last Name</th>';
         $table .= '         <th class="tableHeaders" width ="100px">Medication List ID </th>'; 
-        $table .= '         <th class="tableHeaders" width ="200px">Doctor notes </th>';       
+        $table .= '         <th class="tableHeaders" width ="400px">Doctor notes </th>';       
         if ($id != 0)
-			$table .= '         <th class="tableHeaders" width ="200px">Update</th>';       
+			$table .= '         <th class="tableHeaders" width ="400px">Update notes</th>';       
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
@@ -59,19 +58,16 @@ function getPatientTable($id) {
 		$table .= '         <td> '. $notes . ' </td>';  
         if ($id != 0){
 			$table .= '         <td>
-									
-									<button onclick="update()"> Update </button>
-									<script>
-									var hcard = "<? $hcard ?>"
-									function update(){
-										var up=prompt("Please enter patient updated info", "info");
-										
-										window.location.href = "index.php?update="+up+"&id="+hcard+"#Patients";	
-									}
-									
-									</script>
+									<form action="index.php#Patients" method="post">
+									   Notes: <input type="text" size="30" name="updateNotes" /> 
+									   <input type="submit" value="Submit" />
+									</form>
 								</td>';
-							
+			if (isset ($_POST['updateNotes'])){
+					echo $_POST['updateNotes'];
+					updatePatient($hcard, $_POST['updateNotes']);
+			}
+			
 			}
 			
 			
