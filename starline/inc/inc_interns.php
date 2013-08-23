@@ -42,9 +42,6 @@ function getInternTable($id) {
         $table .= '         <th class="tableHeaders" width ="100px">Last Name</th>';
         $table .= '         <th class="tableHeaders" width ="100px">Unit ID </th>'; 
         $table .= '         <th class="tableHeaders" width ="200px">Position </th>';   
-        $table .= '         <th class="tableHeaders" width ="200px">Schedule </th>';
-         $table .= '        <th class="tableHeaders" width ="200px">Action </th>';    
-
         //$table .= '         <th class="tableHeaders" width ="200px">Schedule </th>';
         //$table .= '        <th class="tableHeaders" width ="200px">Action </th>';    
         $table .= '    </tr>';
@@ -61,8 +58,6 @@ function getInternTable($id) {
         $table .= '         <td> '. $lname . ' </td>';  
         $table .= '         <td> '. $unitID. ' </td>';       
         $table .= '         <td> '. $jobID . ' </td>';
-        $table .= '         <td> <a href="#"> See schedule </a>  </td>';
-        $table .= '         <td> <a href="#"> Book for round/surgery </a>  </td>';
         //$table .= '         <td> <a href="#"> See schedule </a>  </td>';
         //$table .= '         <td> <a href="#"> Book for round/surgery </a>  </td>';
         //$table .= '         <td> '. $notes . ' </td>';  

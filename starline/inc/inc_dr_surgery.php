@@ -1,5 +1,6 @@
 <?php
        function getSurgeryTable() {      
+       $id = $_SESSION['EmployeeID']; 
        $query = "SELECT a.AppointmentID, a.RoomID, s.Name, CONCAT(p.FirstName,' ',p.LastName) AS PName, a.StartTime, a.EndTime
                 FROM appointment AS a 
                 JOIN service AS s ON (a.ServiceID = s.ServiceID) 
@@ -31,7 +32,7 @@
         $table .= '         <td> '. $pName . ' </td>';
         
         $table .= '         <td> ';        
-        $query2 = "SELECT e.EmployeeID as eID, CONCAT(e.FirstName,' ',e.LastName,' [',j.Name,']') AS EName 
+        $query2 = "SELECT e.EmployeeID as eID, CONCAT(e.FirstName,' ',e.LastName,' [',j.Name,']') AS EName, j.JobID as jID 
             FROM employee AS e JOIN employee_appointment AS ea ON (ea.EmployeeID = e.EmployeeID) JOIN jobpayroll AS j ON (j.JobID = e.JobID)
             WHERE ea.AppointmentID = $aID
             ORDER BY j.JobID";
@@ -46,11 +47,15 @@
         $table .= '         <td> '. $sd . ' </td>';
         $table .= '         <td> '. $ed . ' </td>';
         $table .= '         <td> '. $sName . ' </td>';
-        if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3 || $_SESSION['JobID'] == 4 ) {
-            $table .= '         <td> <a href="index.php?deleteSurgery='.$row["AppointmentID"].'#Surgeries">Cancel</a> </td>';  
-        } else {
-            $table .= '         <td> Not Allowed </td>';
-        }
+        
+        $result2 = mysql_query($query2);
+        while ($row2 = mysql_fetch_assoc($result2)) {   
+			if ($id == $row2['eID'] &&  $_SESSION['JobID'] == 4 )  {
+				$table .= '         <td> <a href="index.php?deleteSurgery='.$row["AppointmentID"].'#Surgeries">Cancel</a> </td>';  
+			} else if ($row2['jID'] == 2 || $row2['jID'] == 3 || $row2['jID'] == 4) {
+					$table .= "         <td>  </td>";
+			}
+		}
         $table .= '    </tr>';
         }
         $table .= '   </table> </div>';  
@@ -60,7 +65,7 @@
      
     
     function getSurgeryAddForm() {
-        
+        $id = $_SESSION['EmployeeID']; 
         $form = '<div>';
         $form .= '<form action="index.php#Surgeries" method ="POST">';
         
@@ -89,7 +94,8 @@
         $form .= 'Select Employees Involved in the Surgery <br> <select name="eID1" style="width: 150px">';
         $result2 = mysql_query($query2);
           while ($row2 = mysql_fetch_assoc($result2)) {
-            $form .= '<option value="'.$row2['eID'].'">'.$row2['EName'].'</option>';
+			if ($_SESSION['EmployeeID'] == $row2['eID'])
+				$form .= '<option value="'.$row2['eID'].'">'.$row2['EName'].'</option>';
         }
         $form .= '      </select>   ';
         
@@ -114,7 +120,7 @@
         $form .= '      </select> ';
         
         $form .= '<br> Select Patient <select name="patientID" style="width: 150px">';
-        $query2 = "SELECT HospitalCardID as pID, CONCAT(p.FirstName,' ',p.LastName) AS PName FROM patient AS p";
+        $query2 = "SELECT HospitalCardID as pID, CONCAT(p.FirstName,' ',p.LastName) AS PName FROM patient AS p WHERE p.DoctorID=$id";
         $result2 = mysql_query($query2);
           while ($row2 = mysql_fetch_assoc($result2)) {
             $form .= '<option value="'.$row2['pID'].'">'.$row2['PName'].'</option>';

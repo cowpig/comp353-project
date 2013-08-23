@@ -69,12 +69,9 @@ require 'inc/inc_schedule.php';
     
   <div id="Schedules"><br>
    <?php  
-   
-      getScheduleForm();
-      if (isset($_POST['scheduleEmployeeID'])) {
-        echo getScheduleTable($_POST['scheduleEmployeeID']);
-      }  
-    ?>
+         
+        echo getScheduleTable($_SESSION['EmployeeID']);
+     ?>
   </div>
   
   <div id="Reports"><br>
