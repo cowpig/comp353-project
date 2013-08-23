@@ -73,7 +73,9 @@
         $form .= '</select><br>';
         
         $form .= 'Select Surgery Type <select name="surgeryType">';
-        $query = "SELECT ServiceID, Name FROM service WHERE ServiceID = 1 OR ServiceID = 3 OR ServiceID = 9";
+        $query = "SELECT ServiceID, Name
+					FROM service 
+					WHERE ServiceID = 1 OR ServiceID = 3 OR ServiceID = 9";
         $result = mysql_query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $form .= '<option value="'.$row['ServiceID'].'">'.$row['Name'].'</option>';

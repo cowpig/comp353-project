@@ -2,6 +2,8 @@
 require 'inc/inc_global.php';
 require 'inc/inc_patients.php';
 require 'inc/inc_interns.php';
+require 'inc/inc_dr_surgery.php';
+require 'inc/inc_schedule.php';
 
 ?>
 <div id="jQueryUITabs1">
@@ -48,11 +50,31 @@ require 'inc/inc_interns.php';
    
   <div id="Surgeries"><br>
       <?php 
-
-     ?>      
+     
+        if (isset($_POST['patientID']) && isset($_POST['eID1']) && isset($_POST['roomNum'])) {
+          addSurgery($_POST['roomNum'], $_POST['patientID'], $_POST['eID1'], $_POST['eID2'], $_POST['eID3'], $_POST['startTime'], $_POST['endTime'], $_POST['surgeryType']);
+        }
+        if (isset($_GET['deleteSurgery'])) {
+            deleteSurgery($_GET['deleteSurgery']);
+        }        
+        if (isset($_GET['surgery'])) {
+            echo '<a href="index.php?#Surgeries">Return</a><br><br>';
+            getSurgeryAddForm();
+        }  else {
+            echo '<a href="index.php?surgery=true#Surgeries">Click Here To Schedule a Surgery</a><br><br>';
+        }
+        echo getSurgeryTable();
+     ?>    
   </div>
     
   <div id="Schedules"><br>
+   <?php  
+   
+      getScheduleForm();
+      if (isset($_POST['scheduleEmployeeID'])) {
+        echo getScheduleTable($_POST['scheduleEmployeeID']);
+      }  
+    ?>
   </div>
   
   <div id="Reports"><br>
