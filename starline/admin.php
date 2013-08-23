@@ -22,7 +22,7 @@ require 'inc/inc_reports.php';
     <li><a href="#Surgeries"><span>Surgeries</span></a></li>
     <li><a href="#Schedules"><span>Schedules</span></a></li>
     <li><a href="#Staff"><span>Staff</span></a></li>
-<!--    <li><a href="#Reports"><span>Reports</span></a></li>-->
+    <li><a href="#Reports"><span>Reports</span></a></li>
   </ul>
     
   <div id="Home"><br>
@@ -37,10 +37,9 @@ require 'inc/inc_reports.php';
         
         if (isset($_POST['sType'])) {
             addServiceType($_POST['sType'], $_POST['aBill']);
-        }
-      
+        }    
         if (isset($_POST['serviceID'])) {
-            addService($_POST['serviceID'], $_POST['patientID'], $_POST['employeeID'], $_POST['unitID'], $_POST['startTime'], $_POST['endTime']);
+            addService($_POST['serviceID'], $_POST['patientID'], $_POST['employeeID'], $_POST['unitID'], $_POST['startTime'], $_POST['endTime'], $_POST['roomNum']);
         }
         if (isset($_GET['delete'])) {
             deleteService($_GET['delete']);
@@ -54,6 +53,8 @@ require 'inc/inc_reports.php';
         } else {
             if ($_SESSION['JobID'] == 1){ 
                  echo '<a href="index.php?serviceType=true#Services">Click Here To Add a Service Type</a><br>';
+            } else {
+                echo 'Click Here To Add a Service Type[Only For Directors]<br>';
             }
             echo '<a href="index.php?service=true#Services">Click Here To Schedule a Service</a><br><br>Current Scheduled Services <br>';
             echo getServiceTable();
@@ -66,7 +67,8 @@ require 'inc/inc_reports.php';
      echo '<a href="index.php?#Supplies">Return to Start</a><br>';
      
         if (isset($_GET['tname'])) {
-            orderSupply($_GET['tname'], $_GET['id']);
+            if (!isset($_GET["sr"])) { $_GET["sr"] = 0; }
+            orderSupply($_GET['tname'], $_GET['id'], $_GET["sr"]);
         }
      
          if (!isset($_POST['supplyType']) && !isset($_POST['supplySpecificType'])) {
@@ -86,8 +88,11 @@ require 'inc/inc_reports.php';
   <div id="Surgeries"><br>
       <?php 
      
+        if (isset($_POST['surType'])) {
+            addSurgeryType($_POST['surType'], $_POST['aBill']);
+        }    
         if (isset($_POST['patientID']) && isset($_POST['eID1']) && isset($_POST['roomNum'])) {
-          addSurgery($_POST['roomNum'], $_POST['patientID'], $_POST['eID1'], $_POST['eID2'], $_POST['eID3'], $_POST['startTime'], $_POST['endTime'], $_POST['surgeryType']);
+            addSurgery($_POST['roomNum'], $_POST['patientID'], $_POST['eID1'], $_POST['eID2'], $_POST['eID3'], $_POST['startTime'], $_POST['endTime'], $_POST['surgeryType']);
         }
         if (isset($_GET['deleteSurgery'])) {
             deleteSurgery($_GET['deleteSurgery']);
@@ -95,10 +100,21 @@ require 'inc/inc_reports.php';
         if (isset($_GET['surgery'])) {
             echo '<a href="index.php?#Surgeries">Return</a><br><br>';
             getSurgeryAddForm();
-        }  else if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3){ 
-            echo '<a href="index.php?surgery=true#Surgeries">Click Here To Schedule a Surgery</a><br><br>';
+        }  else  if (isset($_GET['surgeryType'])) {
+            echo '<a href="index.php?#Surgeries">Return</a><br><br>';
+            getSurgeryTypeAddForm();
+        }  else {
+            if ($_SESSION['JobID'] == 1){ 
+                     echo '<a href="index.php?surgeryType=true#Surgeries">Click Here To Add a Surgery Type</a><br>';
+            } 
+            if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3){ 
+                echo 'Click Here To Add a Service Type[Only For Directors]<br>';
+                echo '<a href="index.php?surgery=true#Surgeries">Click Here To Schedule a Surgery</a><br><br>';
+            }
         }
-        echo getSurgeryTable();
+        if (!isset($_GET['surgeryType'])) {
+            echo getSurgeryTable();
+        }
      ?>      
   </div>
     
@@ -124,14 +140,25 @@ require 'inc/inc_reports.php';
      ?>   
   </div>
   
-<!--  <div id="Reports"><br>
-
-  </div>   -->
+    <div id="Reports"><br>
+        <?php
+        
+            if (isset($_POST['doctorID'])) {
+                getDoctorReport($_POST['doctorID']);
+            } else if (isset($_POST['serviceUnit'])) {
+                getServiceReport($_POST['serviceUnit'], $_POST['startTimeReport'], $_POST['endTimeReport']);
+            } else if (isset($_POST['reportMainType'])) {
+                getSpecificReportForm($_POST['reportMainType']);
+            } else {
+                getReportMainForm();
+            }
+        ?>
+  </div>   
     
 </div>
 <script type="text/javascript">$(function(){$("#jQueryUITabs1").tabs();$(".datepicker").datetimepicker({
 	timeFormat: 'HH:mm:ss',
-	stepHour: 2,
+	stepHour: 1,
 	stepMinute: 10,
 	stepSecond: 10,
         dateFormat:'yy-mm-dd'

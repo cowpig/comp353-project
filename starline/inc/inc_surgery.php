@@ -5,7 +5,7 @@
                 JOIN service AS s ON (a.ServiceID = s.ServiceID) 
                 JOIN patient AS p ON (p.HospitalCardID = a.PatientID) 
                 JOIN unit AS u ON (u.UnitID = a.UnitID)
-                WHERE s.ServiceID = 1 OR s.ServiceID = 3 OR s.ServiceID = 9
+                WHERE s.ServiceID IN (SELECT ServiceID FROM Surgeries)
                 ORDER BY `a`.`StartTime`  ASC";
         $result = mysql_query($query);
         
@@ -73,7 +73,7 @@
         $form .= '</select><br>';
         
         $form .= 'Select Surgery Type <select name="surgeryType">';
-        $query = "SELECT ServiceID, Name FROM service WHERE ServiceID = 1 OR ServiceID = 3 OR ServiceID = 9";
+        $query = "SELECT ServiceID, Name FROM Service WHERE ServiceID IN (SELECT ServiceID FROM Surgeries)";
         $result = mysql_query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $form .= '<option value="'.$row['ServiceID'].'">'.$row['Name'].'</option>';
@@ -133,11 +133,15 @@
         
         $stQuery = "SELECT COUNT(*) AS count FROM `appointment` WHERE `StartTime` <= '$startTime' AND `EndTime` >= '$startTime' AND RoomID = $rID";
         $etQuery = "SELECT COUNT(*) AS count FROM `appointment` WHERE `StartTime` <= '$endTime' AND `EndTime` >= '$endTime' AND RoomID = $rID";
+        $inQuery = "SELECT COUNT(*) AS count FROM `appointment` WHERE `StartTime` >= '$endTime' AND `EndTime` <= '$endTime' AND RoomID = $rID";
         $stresult = mysql_query($stQuery);
         $etresult = mysql_query($etQuery);
+        $inresult = mysql_query($inQuery);
         $stRow = mysql_fetch_assoc($stresult);
         $etRow = mysql_fetch_assoc($etresult);
-        if ($stRow['count'] > 0 || $etRow['count'] > 0) {
+        $inRow = mysql_fetch_assoc($inresult);
+       // echo  $stQuery .'<br>' .$etQuery;
+        if ($stRow['count'] > 0 || $etRow['count'] > 0 || $inRow['count'] > 0) {
             //echo  $stQuery .'<br>' .$etQuery;
             echo "<p> This Room In Unavailable at the Specified Time. Please Pick Another Time. <br> </p>";
         } else {
@@ -180,4 +184,48 @@
     }
    
     
+        function getSurgeryTypeAddForm() {
+
+        $form = '<div>';
+        $form .= '<form action="index.php#Surgeries" method ="POST">'; 
+
+        $form .= 'Enter Surgery Type Name <input type="text" name="surType"><br>';
+        $form .= 'Enter Service Amount Billable <input type="text" name="aBill">';
+
+        $form .= '<input name="submit_change" type="submit" value="Submit">'; 
+        $form .= '</form></div>';
+        echo $form . '<br> Current Surgeries List';
+        
+        $query = "SELECT ServiceID, Name, AmountBillable FROM Service AS s WHERE s.ServiceID IN (SELECT ServiceID FROM Surgeries)";
+        $result = mysql_query($query);
+            
+        $table = '<div><table border="1" width ="300px">';
+        $table .= '    <tr> <th class="tableHeaders" width ="170px">Surgery Type Name</th>';
+        $table .= '         <th class="tableHeaders" width ="130px">Amount Billable</th>';
+        $table .= '    </tr>';
+        
+        while ($row = mysql_fetch_assoc($result)) {
+            $sName =  $row['Name'];
+            $abill =  $row['AmountBillable'];
+       
+            $table .= '    <tr> <td> '. $sName . ' </td>';
+            $table .= '     <td> '. $abill . ' </td>';
+            //$table .= '     <td> <a href="index.php?deleteServiceType='.$row["ServiceID"].'#Services">Delete Now</a> </td>';
+            $table .= '    </tr>';
+        }
+        $table .= '   </table> </div>';  
+        
+        echo $table;      
+    }
+    function addSurgeryType($surType, $aBill) {
+        $query = "INSERT INTO service(Name, AmountBillable) VALUES ('$surType','$aBill')";
+        $query2 = "INSERT INTO surgeries (ServiceID) VALUES ((SELECT ServiceID FROM Service WHERE Name = '$surType'))";
+        if(mysql_query($query) && mysql_query($query2)) {
+            echo '<br> Surgery Type Added Succesfully! <br>';
+        }  else {
+            echo $query;
+            echo $query2;
+            echo 'query error';
+        }
+    }    
 ?>

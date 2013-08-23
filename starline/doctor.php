@@ -4,6 +4,7 @@ require 'inc/inc_patients.php';
 require 'inc/inc_interns.php';
 require 'inc/inc_dr_surgery.php';
 require 'inc/inc_schedule.php';
+require 'inc/inc_doctor_reports.php';
 
 ?>
 <div id="jQueryUITabs1">
@@ -79,12 +80,19 @@ require 'inc/inc_schedule.php';
   </div>
   
   <div id="Reports"><br>
+    <?php  
+        if (isset($_POST['reportMainType'])) {
+            getDoctorSpecificReportForm($_POST['reportMainType']);
+        } else {
+            getDoctorReportMainForm();
+        }
+     ?>
   </div>   
     
 </div>
 <script type="text/javascript">$(function(){$("#jQueryUITabs1").tabs();$(".datepicker").datetimepicker({
 	timeFormat: 'HH:mm:ss',
-	stepHour: 2,
+	stepHour: 1,
 	stepMinute: 10,
 	stepSecond: 10,
         dateFormat:'yy-mm-dd'

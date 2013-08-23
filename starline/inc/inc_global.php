@@ -9,7 +9,13 @@
         $wage =  $resultdata['wagerate'];
         $payroll = $resultdata['payroll'];
 
-        echo "Your current bi-weekly period pay is $".getPayValue($jobID, $empID, $wage, $payroll)." <br>";
+        if ($wage == 'hour') {
+            $currentPay = getPayValue($jobID, $empID, $wage, $payroll);
+            echo "Your current bi-weekly period pay is $";
+            echo (''.($currentPay*2).'--- ($'.$currentPay.' actual as only 1 week recorded)<br>');
+        } else {
+            echo "Your current bi-weekly period pay is $".getPayValue($jobID, $empID, $wage, $payroll)." <br>";
+        }
         if ($wage == 'year') { 
             echo 'Your total current yearly pay is $'.round($_SESSION['payrollAdjusted'],2); 
         }

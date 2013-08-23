@@ -17,7 +17,7 @@
 </div>
 <script type="text/javascript">$(function(){$("#jQueryUITabs1").tabs();$(".datepicker").datetimepicker({
 	timeFormat: 'HH:mm:ss',
-	stepHour: 2,
+	stepHour: 1,
 	stepMinute: 10,
 	stepSecond: 10,
         dateFormat:'yy-mm-dd'
@@ -51,7 +51,7 @@
         $table .= '         <th class="tableHeaders" width ="150px">Start Time</th>';
         $table .= '         <th class="tableHeaders" width ="150px">End Time</th>';
         $table .= '    </tr>';
-        
+       // echo $query . '<br>'. $query2;
         while ($row = mysql_fetch_assoc($result2)) {
             $sName =  $row['ServiceName'];
             $st =  $row['StartTime'];
@@ -61,9 +61,30 @@
             $table .= '     <td> '. $et . ' </td>';
             $table .= '    </tr>';
         }
-        $table .= '   </table> </div>';  
+        $table .= '   </table> </div><br>';  
+       
+       echo $table;
+       
+       $medQuery = "SELECT m.Description
+            FROM patient AS p
+            JOIN medication_list AS ml ON ( p.MedicationListID = ml.MedicationListID ) 
+            JOIN medication AS m ON ( m.MedicationID = ml.MedicationID ) 
+            WHERE p.MedicareNumber =$mCard";
+       $medresult = mysql_query($medQuery);
+       
+        $table = '<div><table border="1">';
+        $table .= '    <tr> <th class="tableHeaders">Medication List</th>';
+        $table .= '    </tr>';
+       // echo $query . '<br>'. $query2;
+        while ($row = mysql_fetch_assoc($medresult)) {
+            $med =  $row['Description'];
+            $table .= '    <tr> <td> '. $med . ' </td>';
+            $table .= '    </tr>';
+        }
+        $table .= '   </table> </div>'; 
         
-        echo $table;  
+        echo $table;
+       
     }
 
 ?>

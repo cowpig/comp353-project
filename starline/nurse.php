@@ -21,7 +21,7 @@ require 'inc/inc_schedule.php';
 </div>
 <script type="text/javascript">$(function(){$("#jQueryUITabs1").tabs();$(".datepicker").datetimepicker({
 	timeFormat: 'HH:mm:ss',
-	stepHour: 2,
+	stepHour: 1,
 	stepMinute: 10,
 	stepSecond: 10,
         dateFormat:'yy-mm-dd'

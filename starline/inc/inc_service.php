@@ -6,7 +6,7 @@
                 JOIN service AS s ON (a.ServiceID = s.ServiceID) 
                 JOIN patient AS p ON (p.HospitalCardID = a.PatientID)
                 JOIN unit AS u ON (u.UnitID = a.UnitID) 
-                WHERE s.ServiceID <> 1 AND s.ServiceID <> 3 AND s.ServiceID <> 9
+                WHERE s.ServiceID NOT IN (SELECT ServiceID FROM Surgeries)
                 ORDER BY `a`.`StartTime`  ASC";
         $result = mysql_query($query);
             
@@ -71,7 +71,7 @@
         $form .= '<form action="index.php#Services" method ="POST">'; 
         
         $form .= 'Select Service Type<select name="serviceID">';
-        $query = "SELECT ServiceID, Name FROM Service as s WHERE s.ServiceID <> 1 AND s.ServiceID <> 3 AND s.ServiceID <> 9";
+        $query = "SELECT ServiceID, Name FROM Service as s WHERE s.ServiceID NOT IN (SELECT ServiceID FROM Surgeries)";
         $result = mysql_query($query);
         while ($row = mysql_fetch_assoc($result)) {
             $form .= '<option value="'.$row['ServiceID'].'">'.$row['Name'].'</option>';
@@ -103,6 +103,14 @@
             $form .= '<option value="'.$row['uID'].'">'.$row['UName'].'</option>';
         }
         $form .= '</select><br>';
+        
+        $form .= 'Select Room Number <select name="roomNum">';
+        $query = "SELECT RoomID AS rID FROM room";
+        $result = mysql_query($query);
+        while ($row = mysql_fetch_assoc($result)) {
+            $form .= '<option value="'.$row['rID'].'">'.$row['rID'].'</option>';
+        }
+        $form .= '</select><br>';
         $form .= 'Start Date: <input type="text" class="datepicker" name="startTime"/>';
         $form .= 'End Date: <input type="text" class="datepicker" name="endTime"/><br>';
         
@@ -114,12 +122,12 @@
         
     }
    
-    function addService($serviceID, $patientID, $employeeID, $unitID, $startTime, $endTime) {
+    function addService($serviceID, $patientID, $employeeID, $unitID, $startTime, $endTime, $rID) {
         $result = mysql_query("SHOW TABLE STATUS LIKE 'appointment'");
         $row = mysql_fetch_assoc($result);
         $nextId = $row['Auto_increment'];
-        $query = "INSERT INTO appointment (AppointmentID, StartTime, EndTime, PatientID, ServiceID, UnitID)
-                  VALUES ($nextId, '$startTime', '$endTime', $patientID, $serviceID, $unitID)";
+        $query = "INSERT INTO appointment (AppointmentID, StartTime, EndTime, PatientID, ServiceID, UnitID, RoomID)
+                  VALUES ($nextId, '$startTime', '$endTime', $patientID, $serviceID, $unitID, $rID)";
         $query2 = "INSERT INTO employee_appointment (EmployeeID, AppointmentID) VALUES ($employeeID, $nextId)";
         if(mysql_query($query) && mysql_query($query2)) {
             echo '<br> Service Inserted Succesfully! <br>';
@@ -155,7 +163,7 @@
         $form .= '</form></div>';
         echo $form . '<br> Current Services List';
         
-        $query = "SELECT ServiceID, Name, AmountBillable FROM Service AS s WHERE s.ServiceID <> 1 AND s.ServiceID <> 3 AND s.ServiceID <> 9";
+        $query = "SELECT ServiceID, Name, AmountBillable FROM Service AS s WHERE s.ServiceID NOT IN (SELECT ServiceID FROM Surgeries)";
         $result = mysql_query($query);
             
         $table = '<div><table border="1" width ="300px">';

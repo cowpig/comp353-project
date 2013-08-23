@@ -11,6 +11,7 @@ $resultData = mysql_fetch_assoc($result);
 $_SESSION['EmployeeID'] = $resultData["EmployeeID"];
 $jobID = $resultData["JobID"];
 $_SESSION['JobID'] = $jobID;
+$_SESSION['UnitID'] = $resultData['UnitID'];
 $userName = $resultData["FirstName"] . ' ' . $resultData["LastName"];
 
 echo "<h3>Welcome!</h3>";
@@ -24,6 +25,8 @@ else if ($jobID > 4 && $jobID < 9) {
 }
 else if($jobID == 4){
     include 'doctor.php';
+} else if ($jobID == 9) {
+    include 'shiftSupervisor.php';    
 } else if ($jobID == 10) {
     include 'nurse.php';
 }

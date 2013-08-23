@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 23, 2013 at 06:04 AM
+-- Generation Time: Aug 23, 2013 at 10:26 AM
 -- Server version: 5.5.32
 -- PHP Version: 5.4.16
 
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `appointment` (
   KEY `RoomID_idx` (`RoomID`),
   KEY `UnitID_idx` (`UnitID`),
   KEY `PatientID_idx` (`PatientID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=38 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=39 ;
 
 --
 -- Dumping data for table `appointment`
@@ -105,7 +105,6 @@ INSERT INTO `appointment` (`AppointmentID`, `Notes`, `StartTime`, `EndTime`, `Se
 (5, 'NULL', '2013-08-16 09:00:00', '2013-08-16 10:00:00', 5, 102, 1, 6363),
 (6, 'NULL', '2013-08-12 10:00:00', '2013-08-12 11:00:00', 6, 202, 2, 6383),
 (7, 'NULL', '2013-08-15 11:00:00', '2013-08-15 12:00:00', 7, 203, 2, 6470),
-(9, 'NULL', '2013-08-13 11:00:00', '2013-08-13 14:00:00', 9, 304, 3, 6481),
 (10, 'NULL', '2013-08-15 07:00:00', '2013-08-15 10:00:00', 10, 204, 2, 6523),
 (11, 'NULL', '2013-08-15 10:00:00', '2013-08-15 13:00:00', 11, 105, 1, 6581),
 (12, 'NULL', '2013-08-14 11:00:00', '2013-08-14 12:00:00', 12, 104, 1, 6596),
@@ -350,7 +349,6 @@ INSERT INTO `employee_appointment` (`EmployeeID`, `AppointmentID`) VALUES
 (1083, 32),
 (1094, 10),
 (1095, 13),
-(1200, 9),
 (1200, 12),
 (1231, 3),
 (1231, 33),
@@ -1582,21 +1580,6 @@ INSERT INTO `unit` (`UnitID`, `Name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `unit_has_nutritionalsupply`
---
-
-CREATE TABLE IF NOT EXISTS `unit_has_nutritionalsupply` (
-  `UnitID` int(10) NOT NULL,
-  `NutritionalSupplyID` int(10) unsigned NOT NULL,
-  `SupplyTypeID` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`NutritionalSupplyID`,`SupplyTypeID`),
-  KEY `fk_Unit_has_NutritionalSupply_NutritionalSupply__idx` (`NutritionalSupplyID`,`SupplyTypeID`),
-  KEY `fk_Unit_has_NutritionalSupply_Unit1_idx` (`UnitID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `unit_has_supplyroom`
 --
 
@@ -1642,7 +1625,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `Password` varchar(100) NOT NULL,
   `EmployeeID` int(11) NOT NULL,
   PRIMARY KEY (`UserID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `user`
@@ -1653,7 +1636,8 @@ INSERT INTO `user` (`UserID`, `Login`, `Password`, `EmployeeID`) VALUES
 (2, 'admin', 'dollar', 1006),
 (3, 'doctor', 'dollar', 1039),
 (4, 'nurse', 'dollar', 1231),
-(5, 'resident', 'dollar', 1003);
+(5, 'resident', 'dollar', 1003),
+(6, 'shiftsuper', 'dollar', 1005);
 
 -- --------------------------------------------------------
 

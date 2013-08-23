@@ -21,7 +21,7 @@
     <?php include 'inc/inc_sidebar.php'; ?>
   </div>
   <div class="content">
-    <?php include 'inc/inc_patient.php'; ?>
+    <?php include 'inc/inc_patient_info.php'; ?>
   </div>
   <div align="center">
 </div>
