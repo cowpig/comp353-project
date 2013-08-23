@@ -38,4 +38,3 @@ SELECT a.StartTime, a.EndTime, a.PatientID, s.Name, s.AmountBillable FROM employ
     WHERE e.EmployeeID = EMPLOYEEID
     AND a.StartTime < NOW() AND a.EndTime > NOW();
 
-
