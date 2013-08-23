@@ -62,31 +62,32 @@
      
      function getPatientReport(){
 		   echo '<a href="index.php?#Reports">Return</a><br><br>';
-         $query = "SELECT * 
-                FROM patient as p
-                ORDER BY MedicationListID ";
+         $query = "SELECT p.MedicareNumber, p.FirstName, p.LastName, m.Description, p.DoctorNotes
+                FROM patient AS p
+                JOIN medication_list AS ml ON ( p.medicationListID = ml.medicationListID ) 
+                JOIN medication AS m ON ( m.medicationID = ml.medicationID )";
         $result = mysql_query($query);
         $table = '<div><table border="1" width ="830px">';
         $table .= '    <tr>';       
-		$table .= '         <th class="tableHeaders" width="50px">Medication ID</th>';
-        $table .= '         <th class="tableHeaders">Medicare number</th>';
+		$table .= '         <th class="tableHeaders">Medication Name</th>';
         $table .= '         <th class="tableHeaders">First Name</th>';
-        $table .= '         <th class="tableHeaders">Last Name</th>';           
-        $table .= '         <th class="tableHeaders" width ="200px">Doctor notes </th>'; 
+        $table .= '         <th class="tableHeaders">Last Name</th>';  
+        $table .= '         <th class="tableHeaders">Medicare number</th>';
+        $table .= '         <th class="tableHeaders" width>Doctor notes </th>'; 
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
             $medicare=$row["MedicareNumber"];
             $fname =  $row["FirstName"];
             $lname = $row["LastName"];
-            $medlist =  $row["MedicationListID"];
+            $medlist =  $row["Description"];
             $notes =  $row["DoctorNotes"];
 		$table .= '    <tr>';
-        $table .= '         <td> '. $medlist . ' </td>';
-        $table .= '         <td> '. $medicare . ' </td>';  
+        $table .= '         <td> '. $medlist . ' </td>'; 
         $table .= '         <td> '. $fname. ' </td>';       
         $table .= '         <td> '. $lname . ' </td>';
-		$table .= '         <td> '. $notes . ' </td>';  
+        $table .= '         <td> '. $medicare . ' </td>'; 
+        $table .= '         <td> '. $notes . ' </td>';  
         $table .= '    </tr>';
         }
         $table .= '   </table> </div>';  
@@ -94,4 +95,5 @@
         echo $table;   
 		 
 		 
-	 }
+        }
+?>

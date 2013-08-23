@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 23, 2013 at 10:26 AM
+-- Generation Time: Aug 23, 2013 at 06:39 PM
 -- Server version: 5.5.32
 -- PHP Version: 5.4.16
 
@@ -99,22 +99,22 @@ CREATE TABLE IF NOT EXISTS `appointment` (
 
 INSERT INTO `appointment` (`AppointmentID`, `Notes`, `StartTime`, `EndTime`, `ServiceID`, `RoomID`, `UnitID`, `PatientID`) VALUES
 (1, 'NULL', '2013-08-13 07:00:00', '2013-08-13 15:00:00', 1, 301, 3, 6055),
-(2, 'NULL', '2013-08-13 09:00:00', '2013-08-13 10:00:00', 2, 101, 1, 6096),
+(2, 'NULL', '2013-08-13 09:00:00', '2013-08-13 10:00:00', 2, 101, 1, 6070),
 (3, 'NULL', '2013-08-14 07:00:00', '2013-08-14 17:00:00', 3, 303, 3, 6344),
-(4, 'NULL', '2013-08-15 09:00:00', '2013-08-15 10:00:00', 4, 201, 2, 6315),
+(4, 'NULL', '2013-08-15 09:00:00', '2013-08-15 10:00:00', 4, 201, 2, 6217),
 (5, 'NULL', '2013-08-16 09:00:00', '2013-08-16 10:00:00', 5, 102, 1, 6363),
-(6, 'NULL', '2013-08-12 10:00:00', '2013-08-12 11:00:00', 6, 202, 2, 6383),
+(6, 'NULL', '2013-08-12 10:00:00', '2013-08-12 11:00:00', 6, 202, 2, 6260),
 (7, 'NULL', '2013-08-15 11:00:00', '2013-08-15 12:00:00', 7, 203, 2, 6470),
 (10, 'NULL', '2013-08-15 07:00:00', '2013-08-15 10:00:00', 10, 204, 2, 6523),
 (11, 'NULL', '2013-08-15 10:00:00', '2013-08-15 13:00:00', 11, 105, 1, 6581),
 (12, 'NULL', '2013-08-14 11:00:00', '2013-08-14 12:00:00', 12, 104, 1, 6596),
 (13, 'NULL', '2013-08-16 10:00:00', '2013-08-16 14:00:00', 13, 105, 1, 6835),
-(25, NULL, '2013-08-13 10:00:00', '2013-08-18 20:00:00', 3, 303, 3, 6106),
-(28, NULL, '2013-08-13 10:00:00', '2013-08-13 16:00:00', 1, 305, 3, 6023),
-(29, NULL, '2013-08-13 08:00:00', '2013-08-13 10:00:00', 7, 203, 2, 6067),
+(25, NULL, '2013-08-13 10:00:00', '2013-08-18 20:00:00', 3, 303, 3, 6317),
+(28, NULL, '2013-08-13 10:00:00', '2013-08-13 16:00:00', 1, 305, 3, 6197),
+(29, NULL, '2013-08-13 08:00:00', '2013-08-13 10:00:00', 7, 203, 2, 6344),
 (32, NULL, '2013-08-14 08:00:00', '2013-08-14 10:00:00', 9, 304, 3, 6178),
-(33, NULL, '2013-08-16 08:00:00', '2013-08-19 10:00:00', 3, 301, 3, 6023),
-(37, NULL, '2013-08-01 00:00:00', '2013-08-16 00:00:00', 1, 301, 3, 6023);
+(33, NULL, '2013-08-16 08:00:00', '2013-08-19 10:00:00', 3, 301, 3, 6457),
+(37, NULL, '2013-08-15 11:00:00', '2013-08-15 13:00:00', 1, 301, 3, 6476);
 
 -- --------------------------------------------------------
 
@@ -835,8 +835,7 @@ INSERT INTO `medication` (`SupplyTypeID`, `MedicationID`, `MedicalSupplyID`, `De
 CREATE TABLE IF NOT EXISTS `medication_list` (
   `MedicationListID` int(11) NOT NULL,
   `MedicationID` int(11) NOT NULL,
-  PRIMARY KEY (`MedicationID`),
-  UNIQUE KEY `MedicationID_UNIQUE` (`MedicationID`)
+  PRIMARY KEY (`MedicationListID`,`MedicationID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -844,36 +843,38 @@ CREATE TABLE IF NOT EXISTS `medication_list` (
 --
 
 INSERT INTO `medication_list` (`MedicationListID`, `MedicationID`) VALUES
-(13, 2),
-(15, 5),
 (1, 7),
-(12, 9),
-(12, 10),
 (1, 11),
-(10, 13),
+(2, 17),
+(2, 23),
+(3, 2),
+(3, 6),
+(4, 41),
+(4, 45),
+(5, 16),
+(5, 18),
+(6, 36),
+(6, 40),
+(6, 49),
+(7, 47),
 (8, 14),
 (8, 15),
-(5, 16),
-(2, 17),
-(5, 18),
-(11, 19),
-(9, 21),
 (8, 22),
-(2, 23),
 (8, 25),
-(9, 29),
 (8, 31),
-(15, 32),
+(9, 21),
+(9, 29),
+(10, 13),
+(11, 19),
+(12, 9),
+(12, 10),
 (12, 33),
-(6, 36),
 (12, 37),
-(6, 40),
-(4, 41),
-(14, 44),
-(4, 45),
-(7, 47),
 (12, 48),
-(6, 49);
+(13, 2),
+(14, 44),
+(15, 5),
+(15, 32);
 
 -- --------------------------------------------------------
 
@@ -997,20 +998,10 @@ CREATE TABLE IF NOT EXISTS `patient` (
 --
 
 INSERT INTO `patient` (`HospitalCardID`, `MedicareNumber`, `FirstName`, `LastName`, `MedicationListID`, `DoctorNotes`, `DoctorID`) VALUES
-(6023, 431805, 'Ingrid', 'Mcmillan', 5, 'NULL', 1226),
-(6025, 503425, 'Joan', 'Hubbard', 10, 'NULL', 1433),
 (6031, 691419, 'Abraham', 'Elliott', 6, 'NULL', 1201),
-(6036, 775839, 'Neil', 'Carter', 13, 'NULL', 1039),
-(6047, 360355, 'Lacota', 'Howell', 2, 'NULL', 1465),
+(6036, 775839, 'Neil', 'Carter', 13, 'hello', 1039),
 (6055, 252435, 'Olga', 'Riley', 2, 'NULL', 1473),
-(6067, 782866, 'Lawrence', 'Reilly', 2, 'NULL', 1254),
-(6070, 504649, 'Ivory', 'Sampson', 5, 'NULL', 1039),
-(6090, 608017, 'Serina', 'Davidson', 3, 'NULL', 1222),
-(6095, 338171, 'Tate', 'Carpenter', 1, 'NULL', 1222),
-(6096, 119366, 'Vera', 'Vargas', 8, 'NULL', 1433),
-(6106, 685929, 'Jonas', 'Castro', 7, 'NULL', 1466),
-(6114, 908431, 'Cherokee', 'Leblanc', 11, 'NULL', 1097),
-(6119, 564536, 'Richard', 'English', 4, 'NULL', 1433),
+(6070, 504649, 'Ivory', 'Sampson', 5, 'Testnote', 1039),
 (6128, 752855, 'Wesley', 'Puckett', 1, 'NULL', 1076),
 (6131, 538046, 'Axel', 'Smith', 6, 'NULL', 1059),
 (6178, 550679, 'Aaron', 'Clayton', 12, 'NULL', 1098),
@@ -1018,83 +1009,46 @@ INSERT INTO `patient` (`HospitalCardID`, `MedicareNumber`, `FirstName`, `LastNam
 (6197, 814567, 'Jolie', 'Rojas', 2, 'NULL', 1084),
 (6198, 370140, 'Steel', 'Sanford', 10, 'NULL', 1083),
 (6202, 171641, 'Fleur', 'Berry', 2, 'NULL', 1219),
-(6210, 324016, 'Vernon', 'Kemp', 9, 'NULL', 1226),
 (6212, 240118, 'Clio', 'Shield', 10, 'NULL', 1083),
 (6217, 461893, 'Phyllis', 'Mckinney', 6, 'NULL', 1039),
-(6231, 908682, 'Mark', 'Clark', 15, 'NULL', 1254),
 (6232, 637854, 'Darius', 'Hunt', 13, 'NULL', 1098),
 (6236, 667654, 'Xandra', 'Jordan', 4, 'NULL', 1075),
-(6237, 987686, 'Freyar', 'Fisher', 12, 'NULL', 1465),
-(6239, 339407, 'Sarah', 'Mullins', 15, 'NULL', 1465),
-(6241, 458537, 'Xena', 'Gomez', 11, 'NULL', 1087),
-(6246, 760713, 'Lucy', 'Shannon', 8, 'NULL', 1254),
 (6254, 188004, 'Blaine', 'Vasquez', 5, 'NULL', 1219),
-(6255, 200805, 'Wayne', 'Herring', 2, 'NULL', 1476),
 (6260, 821091, 'Robin', 'Hogan', 10, 'NULL', 1098),
-(6261, 374634, 'Rigel', 'Fields', 11, 'NULL', 1222),
 (6285, 515138, 'Mannix', 'Ball', 12, 'NULL', 1083),
 (6294, 368506, 'Rina', 'Cross', 9, 'NULL', 1201),
-(6295, 235450, 'Guinevere', 'Faulkner', 10, 'NULL', 1097),
-(6315, 879541, 'Berk', 'Little', 9, 'NULL', 1087),
 (6317, 105972, 'Rina', 'Camacho', 12, 'NULL', 1075),
 (6322, 137516, 'Cadman', 'Boyer', 2, 'NULL', 1083),
-(6340, 197903, 'Brett', 'Park', 4, 'NULL', 1466),
 (6344, 820055, 'Fuller', 'Mendez', 15, 'NULL', 1084),
 (6363, 312001, 'Blaines', 'Foreman', 15, 'NULL', 1076),
-(6383, 338845, 'Morgan', 'Burton', 2, 'NULL', 1476),
-(6451, 793601, 'Farrah', 'Mcmahon', 7, 'NULL', 1467),
 (6457, 340841, 'Cole', 'Patton', 1, 'NULL', 1234),
-(6458, 557770, 'Lucas', 'Pacheco', 11, 'NULL', 1222),
 (6470, 244089, 'Nola', 'Tran', 7, 'NULL', 1084),
 (6473, 924269, 'Walker', 'Hyde', 3, 'NULL', 1473),
 (6474, 629752, 'Nathaniel', 'William', 7, 'NULL', 1083),
 (6476, 756945, 'Blake', 'Delgado', 12, 'NULL', 1234),
-(6479, 373001, 'Graham', 'Alford', 9, 'NULL', 1467),
 (6481, 258728, 'Lillian', 'Garcia', 7, 'NULL', 1039),
 (6484, 189401, 'Guinevere', 'Romero', 6, 'NULL', 1234),
 (6492, 425314, 'Hiram', 'Mcconnell', 12, 'NULL', 1059),
 (6523, 565690, 'Keefe', 'Noel', 10, 'NULL', 1059),
-(6550, 577487, 'Zena', 'Gordon', 12, 'NULL', 1476),
 (6566, 148756, 'Athea', 'Wilkerson', 1, 'NULL', 1084),
 (6581, 563759, 'Hoyt', 'Hyde', 14, 'NULL', 1219),
 (6590, 726708, 'Vincent', 'Johnson', 6, 'NULL', 1076),
-(6592, 275797, 'Indigo', 'Gregory', 2, 'NULL', 1433),
-(6594, 133004, 'Adren', 'Shaw', 7, 'NULL', 1087),
 (6596, 314891, 'Solomon', 'Hodge', 12, 'NULL', 1473),
 (6614, 717518, 'Yolanda', 'Ross', 10, 'NULL', 1473),
-(6651, 561976, 'Wallace', 'Talley', 15, 'NULL', 1226),
 (6662, 785733, 'Whitney', 'Byers', 14, 'NULL', 1219),
-(6670, 747880, 'Diana', 'Bryant', 8, 'NULL', 1097),
 (6672, 781679, 'Damian', 'Bowen', 13, 'NULL', 1075),
 (6679, 310299, 'Ignatius', 'Ware', 9, 'NULL', 1098),
-(6685, 742370, 'Paula', 'Walter', 5, 'NULL', 1226),
-(6689, 795544, 'Justin', 'Foster', 15, 'NULL', 1466),
-(6708, 405890, 'Kennedy', 'Montgomery', 15, 'NULL', 1087),
-(6739, 360986, 'Galvin', 'Walton', 12, 'NULL', 1254),
-(6747, 644260, 'Lilith', 'Cline', 15, 'NULL', 1249),
 (6753, 259593, 'Leonard', 'Combs', 7, 'NULL', 1084),
-(6757, 599305, 'Ignatius', 'Gregory', 7, 'NULL', 1097),
-(6771, 663206, 'Alexander', 'Cherry', 13, 'NULL', 1249),
-(6781, 809957, 'Abraham', 'Maxwell', 12, 'NULL', 1249),
-(6783, 118887, 'Vera', 'Ellison', 6, 'NULL', 1097),
 (6797, 700688, 'Ifeoma', 'Hamilton', 7, 'NULL', 1059),
 (6806, 445144, 'Roanna', 'Sanders', 3, 'NULL', 1039),
 (6835, 497237, 'Donovan', 'Wood', 7, 'NULL', 1076),
 (6836, 828562, 'Isaac', 'Mcpherson', 11, 'NULL', 1076),
 (6854, 893147, 'Adele', 'Mack', 3, 'NULL', 1219),
-(6858, 310958, 'Joshua', 'Mills', 12, 'NULL', 1466),
-(6864, 926628, 'Kelly', 'Mccal', 5, 'NULL', 1467),
-(6890, 892350, 'Ariel', 'Underwood', 5, 'NULL', 1467),
-(6897, 615494, 'Trevor', 'Curry', 9, 'NULL', 1249),
 (6898, 692757, 'Leandra', 'Rose', 15, 'NULL', 1098),
-(6925, 724003, 'Otto', 'Cervantes', 15, 'NULL', 1465),
-(6935, 661400, 'Zelenia', 'Garner', 3, 'NULL', 1222),
-(6947, 239818, 'Isabelle', 'Pace', 13, 'NULL', 1476),
 (6948, 689603, 'Maxwell', 'Myers', 11, 'NULL', 1059),
 (6953, 903526, 'Trevor', 'Gillespie', 2, 'NULL', 1201),
 (6960, 674794, 'Tasha', 'Haley', 3, 'NULL', 1234),
 (6968, 658953, 'Ora', 'Bonner', 12, 'NULL', 1075),
-(6969, 228495, 'Davis', 'Gilmore', 4, 'NULL', 1087),
 (6987, 172046, 'Cameran', 'Barber', 12, 'NULL', 1075),
 (6993, 911602, 'Xyla', 'Ayala', 3, 'NULL', 1201);
 
@@ -1185,7 +1139,7 @@ CREATE TABLE IF NOT EXISTS `service` (
   `AmountBillable` double DEFAULT NULL,
   PRIMARY KEY (`ServiceID`),
   UNIQUE KEY `Name_UNIQUE` (`Name`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=23 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=20 ;
 
 --
 -- Dumping data for table `service`
@@ -1337,7 +1291,7 @@ INSERT INTO `supplyroom_has_basicpatientsupply` (`SupplyRoomNumber`, `Floor`, `B
 (250, 5, 23, 2, 2, 45, 78, '2013-04-26'),
 (250, 5, 24, 2, 2, 32, 62, '2012-07-29'),
 (250, 5, 25, 2, 2, 30, 68, '2012-03-02'),
-(310, 1, 1, 2, 2, 7, 51, '2012-05-14'),
+(310, 1, 1, 2, 2, 51, 51, '2013-08-23'),
 (310, 1, 2, 2, 2, 27, 59, '2013-03-17'),
 (310, 1, 3, 2, 2, 21, 63, '2012-09-15'),
 (310, 1, 4, 2, 2, 15, 55, '2013-02-26'),
@@ -1632,7 +1586,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`UserID`, `Login`, `Password`, `EmployeeID`) VALUES
-(1, 'direct', 'dollar', 8),
+(1, 'direct', 'dollar', 1021),
 (2, 'admin', 'dollar', 1006),
 (3, 'doctor', 'dollar', 1039),
 (4, 'nurse', 'dollar', 1231),

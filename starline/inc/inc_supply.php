@@ -4,13 +4,14 @@
 
         $form = '<div>';
         $form .= '<form action="index.php#Supplies" method ="POST">'; 
-        $form .= 'Select The Supply Type to Order <select name="supplyType">';
-        $form .= '<option value="null">---------</option>';
-        $form .= '<option value="medical">Medical</option>';
-        $form .= '<option value="nonmedical">Non-Medical</option>';
-        $form .= '<option value="nutrition">Nutrition</option>';
-        $form .= '</select>';  
-        $form .= '<input name="submit_change" type="submit" value="Go">'; 
+       // $form .= 'Select The Supply Type to Order <select name="supplyType">';
+       // $form .= '<option value="null">---------</option>';
+        $form .= '<br>Select The Supply Type to Order/View<br>';
+        $form .= '<input type="radio" name="supplyType"value="medical">Medical<br>';
+        $form .= '<input type="radio" name="supplyType" value="nonmedical">Non-Medical<br>';
+        $form .= '<input type="radio" name="supplyType" value="nutrition">Nutrition<br>';
+       // $form .= '</select>';  
+        $form .= '<input name="submit_change" type="submit" value="Proceed">'; 
         $form .= '</form></div>';
 
         echo $form;
@@ -20,19 +21,19 @@
     function getSpecificSupplyForm($type) {
         $form = '<div>';
         $form .= '<form action="index.php#Supplies" method ="POST">'; 
-        $form .= 'Select The Supply Type to Order <select name="supplySpecificType">';
-        $form .= '<option value="null">---------</option>';
-        
+       // $form .= 'Select The Supply Type to Order <select name="supplySpecificType">';
+       // $form .= '<option value="null">---------</option>';
+        $form .= '<br>Select The Specific Supply Type to Order/View<br>';
         if($type == 'medical') {
-            $form .= '<option value="medication">Medication</option>';
-            $form .= '<option value="surgical">Surgical Equipment</option>';
-            $form .= '<option value="support">Supporting Devices</option>';
+            $form .= '<input type="radio" name="supplySpecificType" value="medication">Medication<br>';
+            $form .= '<input type="radio" name="supplySpecificType"  value="surgical">Surgical Equipment<br>';
+            $form .= '<input type="radio" name="supplySpecificType" value="support">Supporting Devices<br>';
         } else  if ($type == 'nonmedical') {
-            $form .= '<option value="patient">Basic Patient</option>';
-            $form .= '<option value="administrative">Administrative</option>';
+            $form .= '<input type="radio" name="supplySpecificType" value="patient">Basic Patient<br>';
+            $form .= '<input type="radio" name="supplySpecificType" value="administrative">Administrative<br>';
         } 
-        $form .= '</select>';  
-        $form .= '<input name="submit_change" type="submit" value="Go">'; 
+       // $form .= '</select>';  
+        $form .= '<input name="submit_change" type="submit" value="Proceed">'; 
         $form .= '</form></div>';
 
         echo $form;

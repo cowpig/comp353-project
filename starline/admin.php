@@ -44,6 +44,9 @@ require 'inc/inc_reports.php';
         if (isset($_GET['delete'])) {
             deleteService($_GET['delete']);
         }
+        if (isset($_GET['deleteServiceType'])) {
+            deleteServiceType($_GET['deleteServiceType']);
+        }
         if (isset($_GET['service'])) {
             echo '<a href="index.php?#Services">View Services</a><br><br>';
             getServiceAddForm();
@@ -53,10 +56,11 @@ require 'inc/inc_reports.php';
         } else {
             if ($_SESSION['JobID'] == 1){ 
                  echo '<a href="index.php?serviceType=true#Services">Click Here To Add a Service Type</a><br>';
-            } else {
+                 echo 'Click Here To Schedule a Service[Only For Admins]<br><br>';;
+            } else if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3){ 
                 echo 'Click Here To Add a Service Type[Only For Directors]<br>';
+                echo '<a href="index.php?service=true#Services">Click Here To Schedule a Service</a><br><br>Current Scheduled Services <br>';;
             }
-            echo '<a href="index.php?service=true#Services">Click Here To Schedule a Service</a><br><br>Current Scheduled Services <br>';
             echo getServiceTable();
         }
       ?>
@@ -97,6 +101,9 @@ require 'inc/inc_reports.php';
         if (isset($_GET['deleteSurgery'])) {
             deleteSurgery($_GET['deleteSurgery']);
         }        
+        if (isset($_GET['deleteSurgeryType'])) {
+            deleteSurgeryType($_GET['deleteSurgeryType']);
+        }
         if (isset($_GET['surgery'])) {
             echo '<a href="index.php?#Surgeries">Return</a><br><br>';
             getSurgeryAddForm();
@@ -105,10 +112,11 @@ require 'inc/inc_reports.php';
             getSurgeryTypeAddForm();
         }  else {
             if ($_SESSION['JobID'] == 1){ 
-                     echo '<a href="index.php?surgeryType=true#Surgeries">Click Here To Add a Surgery Type</a><br>';
+                 echo '<a href="index.php?surgeryType=true#Surgeries">Click Here To Add a Surgery Type</a><br>';
+                 echo 'Click Here To Schedule a Surgery[Only For Admins]<br><br>';;
             } 
             if ($_SESSION['JobID'] == 2 || $_SESSION['JobID'] == 3){ 
-                echo 'Click Here To Add a Service Type[Only For Directors]<br>';
+                echo 'Click Here To Add a Surgery Type[Only For Directors]<br>';
                 echo '<a href="index.php?surgery=true#Surgeries">Click Here To Schedule a Surgery</a><br><br>';
             }
         }

@@ -60,7 +60,13 @@ require 'inc/inc_schedule.php';
             $eID = $row['eID'];
             $eName = $row['EName'];
             echo '<br>Nurse Name: <span style="color:darkred"> '.$eName.'  </span> and her patient services:';
-            getAppointments($eID);
+            $apQuery = "SELECT * FROM employee_appointment WHERE EmployeeID = $eID";
+            $res = mysql_query($apQuery);
+            if (mysql_num_rows($res) > 0) {
+                getAppointments($eID);
+            } else {
+                echo '<div style="color:darkblue">No appointments scheduled for this Nurse</div>';
+            }
         }
     }
     

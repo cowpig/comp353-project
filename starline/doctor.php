@@ -25,16 +25,17 @@ require 'inc/inc_doctor_reports.php';
   
   <div id="Patients"><br>
       <?php
+        if (isset($_POST['updateNotes'])){
+                echo "lalala";
+                updatePatient($_POST['hcard'], $_POST['updateNotes']);
+        }
         if (!isset($_POST['patientChoice']) || ($_POST['patientChoice'])==0) {
             getPatientForm();
             echo getPatientTable(0);
         } else {
             getPatientForm();
             echo getPatientTable($_SESSION['EmployeeID']);
-           	if (isset($_POST['updateNotes'])){
-				echo "lalala";
-				//updatePatient($hcard, $_POST['updateNotes']);
-			}
+           	
         }
 
           

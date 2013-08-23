@@ -18,7 +18,7 @@
 function updatePatient($hcard,$notes){
 	
 	$query = "UPDATE patient
-			  SET DoctorNotes=$notes
+			  SET DoctorNotes='$notes'
 			  WHERE HospitalCardID=$hcard"; 
 	mysql_query($query) or die(mysql_error());
 	
@@ -31,13 +31,13 @@ function getPatientTable($id) {
 			$query .= " WHERE p.DoctorID=$id";
 		} 
         $result = mysql_query($query);
-        $table = '<div><table border="1" width ="700px">';
+        $table = '<div><table border="1" width ="830px">';
         $table .= '    <tr> <th class="tableHeaders" width ="100px">Hospital Card ID</th>';
         $table .= '         <th class="tableHeaders" width ="100px">Medicare Number</th>';
         $table .= '         <th class="tableHeaders" width ="100px">First Name</th>';
         $table .= '         <th class="tableHeaders" width ="100px">Last Name</th>';
-        $table .= '         <th class="tableHeaders" width ="100px">Medication List ID </th>'; 
-        $table .= '         <th class="tableHeaders" width ="400px">Doctor notes </th>';       
+        $table .= '         <th class="tableHeaders" width ="100px">Medication </th>'; 
+        $table .= '         <th class="tableHeaders" width ="200px">Doctor notes </th>';       
         if ($id != 0)
 			$table .= '         <th class="tableHeaders" width ="400px">Update notes</th>';       
         $table .= '    </tr>';
@@ -54,19 +54,30 @@ function getPatientTable($id) {
         $table .= '         <td> '. $medicare . ' </td>';
         $table .= '         <td> '. $fname . ' </td>';  
         $table .= '         <td> '. $lname. ' </td>';       
-        $table .= '         <td> '. $medlist . ' </td>';
+        $table .= '         <td> '; 
+        
+        $query2 = "SELECT m.Description
+                FROM medication as m 
+                JOIN medication_list AS ml ON (m.medicationID = ml.medicationID)
+                WHERE MedicationListID = $medlist";
+        $result2 = mysql_query($query2);
+        $row2 = mysql_fetch_assoc($result2);
+        $table .= $row2['Description'];
+         while ($row2 = mysql_fetch_assoc($result2)) {
+            $table .= '<br>'.$row2['Description'];
+        }
+        
+        $table .= ' </td>';
 		$table .= '         <td> '. $notes . ' </td>';  
         if ($id != 0){
 			$table .= '         <td>
-									<form action="index.php#Patients" method="post">
-									   Notes: <input type="text" size="30" name="updateNotes" /> 
-									   <input type="submit" value="Submit" />
-									</form>
-								</td>';
-			if (isset ($_POST['updateNotes'])){
-					echo $_POST['updateNotes'];
-					updatePatient($hcard, $_POST['updateNotes']);
-			}
+                                <form action="index.php#Patients" method="post">
+                                   Notes: <input type="text" size="30" name="updateNotes" /> 
+                                   <input type="hidden" name="hcard" value="'.$hcard.'"/>
+                                   <input type="submit" value="Submit" />
+                                </form>
+                        </td>';
+                       
 			
 			}
 			

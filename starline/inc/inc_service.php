@@ -166,9 +166,10 @@
         $query = "SELECT ServiceID, Name, AmountBillable FROM Service AS s WHERE s.ServiceID NOT IN (SELECT ServiceID FROM Surgeries)";
         $result = mysql_query($query);
             
-        $table = '<div><table border="1" width ="300px">';
+        $table = '<div><table border="1" width ="450px">';
         $table .= '    <tr> <th class="tableHeaders" width ="150px">Service Name</th>';
         $table .= '         <th class="tableHeaders" width ="150px">Amount Billable</th>';
+        $table .= '         <th class="tableHeaders" width ="150px">Delete Service</th>';
         $table .= '    </tr>';
         
         while ($row = mysql_fetch_assoc($result)) {
@@ -177,7 +178,7 @@
        
             $table .= '    <tr> <td> '. $sName . ' </td>';
             $table .= '     <td> '. $abill . ' </td>';
-            //$table .= '     <td> <a href="index.php?deleteServiceType='.$row["ServiceID"].'#Services">Delete Now</a> </td>';
+            $table .= '     <td> <a href="index.php?deleteServiceType='.$row["ServiceID"].'#Services">Delete Now</a> </td>';
             $table .= '    </tr>';
         }
         $table .= '   </table> </div>';  
@@ -195,15 +196,21 @@
         }
     }    
     
-//    function deleteServiceType($id) {
-//        $query = "DELETE FROM Service WHERE ServiceID = $id";
-//        if(mysql_query($query)) {
-//            echo '<br> Service Type Deleted Succesfully! <br>';
-//        }  else {
-//            echo $query;
-//            echo 'query error';
-//        }
-//    }
+    function deleteServiceType($id) {
+        $seeUsed = "SELECT ServiceID FROM Appointment WHERE ServiceID = $id";
+        $res = mysql_query($seeUsed);
+        if (mysql_num_rows($res) > 0) {
+            echo "<p> Cannot Delete Service Type, It has already been used in the Hospital</p>";
+        } else {
+            $query = "DELETE FROM Service WHERE ServiceID = $id";
+            if(mysql_query($query)) {
+                echo '<br> Service Type Deleted Succesfully! <br>';
+            }  else {
+                echo $query;
+                echo 'query error';
+            }
+        }
+    }
     
     
     
